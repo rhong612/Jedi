@@ -137,6 +137,6 @@ object codeChecker {
     println("...value = " + value)    
   }
 
-  def main(args: Array[String]): Unit = { check2(); }
+  def main(args: Array[String]): Unit = { check2(); check() }
 
 }

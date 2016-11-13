@@ -1,6 +1,7 @@
 package values
 
 class Notification(val msg : String) extends Value{
+  override def toString = msg
 }
 
 object Notification {
