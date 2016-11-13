@@ -2,7 +2,7 @@ package values
 
 import expressions._
 
-class Number(val value : Double) extends Literal{
+case class Number(val value : Double) extends Literal{
   
   def this(sValue : String) {
     this(sValue.toDouble)
