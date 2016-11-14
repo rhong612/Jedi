@@ -2,7 +2,7 @@ package values
 
 import expressions._
 
-class Boole(val value : Boolean) extends Literal{
+case class Boole(val value : Boolean) extends Literal{
   
   def this(sValue : String) {
     this(sValue.toBoolean)
