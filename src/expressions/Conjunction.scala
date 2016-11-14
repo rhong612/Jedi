@@ -9,7 +9,14 @@ case class Conjunction(main : FunCall, other : List[FunCall] = Nil) extends Spec
       main.execute(env)
     }
     else {
-      var result = Boole(true)
+      var mainBoole = main.execute(env)
+      var result : Boole = null
+      if (mainBoole.isInstanceOf[Boole]) {
+        result = mainBoole.asInstanceOf[Boole]
+      }
+      else {
+        throw new TypeException("Conjunction vals must be of type boole")
+      }
       var index = 0
       //Exit loop the moment result becomes false
       while(index < other.size && result.value) {
