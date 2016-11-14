@@ -1,5 +1,10 @@
 package expressions
 
-case class Disjunction(main : Conjunction, other : List[Conjunction]) extends SpecialForm{
-  
+import values._
+
+case class Disjunction(main : Conjunction, other : List[Conjunction] = Nil) extends SpecialForm{
+  def execute(env : Environment) : Value = {
+    println("Executing disjunction...")
+    Number(0) //Testing
+  }
 }
