@@ -17,9 +17,9 @@ class EwokParsers extends RegexParsers {
      case "if"~"("~cond~")"~body~None => Conditional(cond, body)
      case "if"~"("~cond~")"~body~Some("else" ~ elseBody) => Conditional(cond, body, elseBody)
    }
-   def disjunction : Parser[Disjunction] = (conjunction~rep("||" ~> conjunction)) ^^
+   def disjunction : Parser[SpecialForm] = (conjunction~rep("||" ~> conjunction)) ^^
    {
-     case conjunction~Nil => Disjunction(conjunction)
+     case conjunction~Nil => conjunction
      case conjunction~listConjunctions => Disjunction(conjunction, listConjunctions)
    }
    def conjunction : Parser[Conjunction] = (equality~rep("&&" ~> equality)) ^^
@@ -166,6 +166,21 @@ object EwokParsers {
     expression = "3 + 4 * 5"
     var eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println("Expected: " + 23)
+    println("Actual: " + eTree.get.execute(globalEnv))
+    
+    expression = "def a2 = 3 + 4 * 5"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println("Expected: BINDING CREATED")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    
+    expression = "5"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println("Expected: " + 5)
+    println("Actual: " + eTree.get.execute(globalEnv))
+    
+    expression = "true || false"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println("Expected: true")
     println("Actual: " + eTree.get.execute(globalEnv))
   }
 }

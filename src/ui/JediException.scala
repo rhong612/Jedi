@@ -1,5 +1,5 @@
 package ui
 
-class JediException(val text : String) extends Exception{
+class JediException(val msg : String) extends Exception{
   
 }

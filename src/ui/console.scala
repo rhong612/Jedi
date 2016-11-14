@@ -4,7 +4,6 @@ import values._
 import expressions._
 
 object console {
-  /*
    val parsers = new EwokParsers // for now
    val globalEnv = new Environment()
 
@@ -17,10 +16,20 @@ object console {
    }
    
     def repl {
-      // declare locals
+      var more = true
+      var input = ""
+      var result = ""
       while(more) {
          try {
-            // read/execute/print
+           input = scala.io.StdIn.readLine
+           if (input.equals("quit")) {
+             more = false
+             println("Bye")
+           }
+           else {
+             result = execute(input)
+             println(result)
+           }
          } 
          catch {
             case e: SyntaxException => {
@@ -30,7 +39,9 @@ object console {
                println("column # = " + e.result.next.pos.column)
                println("token = " + e.result.next.first)
             }
-            // handle other types of exceptions
+            case e: UndefinedException => {
+               println(e.msg)
+            }
          } finally {
             Console.flush 
          }
@@ -38,5 +49,4 @@ object console {
    }
     
    def main(args: Array[String]): Unit = { repl }
-   * */
 }

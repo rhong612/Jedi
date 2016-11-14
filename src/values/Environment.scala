@@ -1,6 +1,7 @@
 package values
 
 import scala.collection.mutable.HashMap
+import ui._
 import expressions._
 
 class Environment(private val nextEnv : Environment = null) extends HashMap[Identifier, Value] with Value{
@@ -18,7 +19,7 @@ class Environment(private val nextEnv : Environment = null) extends HashMap[Iden
   def find(id : Identifier) : Value = {
     get(id) match {
       case Some(i) => i
-      case None => if (nextEnv == null) Notification.UNKNOWN else nextEnv.find(id)
+      case None => if (nextEnv == null) throw new UndefinedException("Undefined Identifier: " + id) else nextEnv.find(id)
     }
   }
 }
