@@ -12,11 +12,12 @@ class EwokParsers extends RegexParsers {
      case "def"~id~"="~exp => Declaration(id, exp)
    }
    
-   def conditional : Parser[Conditional] = ("if"~"("~expression~")"~expression~opt("else"~expression)) ^^ 
+   def conditional : Parser[Conditional] = "if"~"("~expression~")"~expression~opt("else"~expression) ^^ 
    {
-     case "if"~"("~cond~")"~body~None => Conditional(cond, body)
      case "if"~"("~cond~")"~body~Some("else" ~ elseBody) => Conditional(cond, body, elseBody)
+     case "if"~"("~cond~")"~body~None => Conditional(cond, body)
    }
+   
    def disjunction : Parser[SpecialForm] = (conjunction~rep("||" ~> conjunction)) ^^
    {
      case conjunction~Nil => conjunction
@@ -59,7 +60,7 @@ class EwokParsers extends RegexParsers {
      case "(" ~ Some(exp ~ expList) ~ ")" => exp :: expList
    }
        
-   def term : Parser[Expression] = (literal | identifier | "("~>expression<~")")
+   def term : Parser[Expression] = literal | identifier | "("~>expression<~")"
    def literal : Parser[Literal] = (boole | number)
    
    def identifier : Parser[Identifier] = ("[a-zA-Z]".r~rep("[0-9a-zA-Z]".r))^^
