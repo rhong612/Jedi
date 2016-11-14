@@ -5,10 +5,8 @@ import expressions._
 import values._
 
 class EwokParsers extends RegexParsers {
-  /*
    def expression: Parser[Expression] = declaration | conditional | disjunction | failure("Invalid expression")
 
-   // def declaration, conditional, dusjunction, and other parsers
    def declaration: Parser[Declaration] = ("def"~identifier~"="~expression) ^^
    {
      case "def"~id~"="~exp => Declaration(id, exp)
@@ -19,16 +17,40 @@ class EwokParsers extends RegexParsers {
      case "if"~"("~cond~")"~body~None => Conditional(cond, body)
      case "if"~"("~cond~")"~body~Some("else" ~ elseBody) => Conditional(cond, body, elseBody)
    }
-   def disjunction : Parser[Boolean] = (conjunction~rep("||"~conjunction)) ^^
+   def disjunction : Parser[Boole] = (conjunction~rep("||" ~> conjunction)) ^^
    {
      case conjunction~Nil => conjunction
      case conjunction~listConjunctions => conjunction || listConjunctions.reduce(_||_)
    }
-   */
-  
+   def conjunction : Parser[Boole] = (equality~rep("&&" ~> equality)) ^^
+   {
+     case equality ~ Nil => equality
+     case equality ~ listEqualities => equality && listEqualities.reduce(_&&_)
+   }
+   def equality : Parser[Boole] = (inequality ~ rep("==" ~> inequality)) ^^
+   {
+     case inequality ~ Nil => inequality
+     case inequality ~ listInequalities => inequality == listInequalities.reduce(_==_)
+   }
+   def inequality : Parser[Boole] = (sum ~ rep("<" ~> sum))
+   def sum : Parser[Number] = (product ~ rep(("""\+|-""".r)~product))
+   def product : Parser[Expression] = (funcall ~ rep(("""\*|/""".r)~funcall)) ^^
+   def funcall : Parser[Expression] = (term ~ opt(operands)) ^^
+   {
+     case term ~ None => FunCall(term)
+     case term ~ Some(opList) => FunCall(term, opList)
+   }
+   
+   def operands : Parser[List[Expression]] = ("(" ~ opt(expression ~ rep(","~expression)) ~")") ^^
+   {
+     case "(" ~ None ~ ")" => Nil
+     case "(" ~ Some(exp ~ expList) ~ ")" => exp :: expList.asInstanceOf[List[Expression]]
+   }
+       
+   def term : Parser[Expression] = (literal | identifier | "("~>expression<~")")
    def literal : Parser[Literal] = (boole | number)
    
-   def identifier : Parser[Identifier] = "[a-zA-Z]".r~rep("[0-9a-zA-Z]".r) ^^
+   def identifier : Parser[Identifier] = ("[a-zA-Z]".r~rep("[0-9a-zA-Z]".r))^^
    {
      case first~Nil => Identifier(first)
      case first~otherChars => Identifier(first + otherChars.reduce(_+_))
@@ -39,7 +61,7 @@ class EwokParsers extends RegexParsers {
     case tree => Boole(tree.toBoolean)
   }
   
-  def number : Parser[Number] = opt("""\+|-""".r)~"""[0-9]+""".r~opt(""".[0-9]+""".r) ^^
+  def number : Parser[Number] = (opt("""\+|-""".r)~"""[0-9]+""".r~opt(""".[0-9]+""".r))  ^^
   {
     case None ~ firstNum ~ None => Number((firstNum).toDouble)
     case None ~ firstNum ~ Some(otherNums) => Number((firstNum + otherNums).toDouble)
@@ -93,6 +115,7 @@ object EwokParsers {
     bTree = ewokParser.parseAll(ewokParser.boole, expression)
     println("Expected: " + expression)
     println("Actual: " + bTree.get)
+    
     
     
     

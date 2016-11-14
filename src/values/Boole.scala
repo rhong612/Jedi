@@ -20,6 +20,10 @@ case class Boole(val value : Boolean) extends Literal{
     new Boole(!value)
   }
   
+  def ==(other : Boole) = {
+    new Boole(this.value == other.value)
+  }
+  
   override def toString = value.toString
 }
 

@@ -1,5 +1,5 @@
 package expressions
 
-class Disjunction extends SpecialForm {
+case class Disjunction(main : Conjunction, other : List[Conjunction]) extends SpecialForm{
   
 }

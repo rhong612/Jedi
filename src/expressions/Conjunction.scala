@@ -1,5 +1,7 @@
 package expressions
 
-class Conjunction extends SpecialForm {
+import values._
+
+case class Conjunction(main : Boole, other : List[Boole]) extends SpecialForm{
   
 }
