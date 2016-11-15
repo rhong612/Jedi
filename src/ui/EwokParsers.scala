@@ -63,10 +63,9 @@ class EwokParsers extends RegexParsers {
    def term : Parser[Expression] = literal | identifier | "("~>expression<~")"
    def literal : Parser[Literal] = (boole | number)
    
-   def identifier : Parser[Identifier] = ("[a-zA-Z]".r~rep("[0-9a-zA-Z]".r))^^
+   def identifier : Parser[Identifier] = ("""[a-zA-Z][0-9a-zA-Z]*""".r)^^
    {
-     case first~Nil => Identifier(first)
-     case first~otherChars => Identifier(first + otherChars.reduce(_+_))
+     case id => Identifier(id)
    }
    
   def boole : Parser[Boole] = ("true" | "false") ^^
