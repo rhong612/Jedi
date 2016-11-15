@@ -14,10 +14,6 @@ object system {
       case "div" => div(args)
       case "equals" => equals(args)
       case "less" => lessThan(args)
-      
-      //Boole operations
-      case "and" => and(args)
-      case "or" => or(args)
       case "not" => not(args)
       
       case _ => throw new UndefinedException(opcode.name)
@@ -83,22 +79,6 @@ object system {
     if (ok.length < vals.length) throw new TypeException("all less than inputs must be numbers")
     val args2 = vals.map(_.asInstanceOf[Number])
     args2(0) < args2(1)
-  }
-  
-  private def and(vals: List[Value]): Value = {
-    if (vals.isEmpty) throw new TypeException("AND expects > 0 inputs")
-    val ok = vals.filter(_.isInstanceOf[Boole])
-    if (ok.length < vals.length) throw new TypeException("all AND inputs must be booles")
-    val args2 = vals.map(_.asInstanceOf[Boole])
-    args2.reduce(_&&_)
-  }
-  
-  private def or(vals: List[Value]): Value = {
-    if (vals.isEmpty) throw new TypeException("OR expects > 0 inputs")
-    val ok = vals.filter(_.isInstanceOf[Boole])
-    if (ok.length < vals.length) throw new TypeException("all OR inputs must be booles")
-    val args2 = vals.map(_.asInstanceOf[Boole])
-    args2.reduce(_||_)
   }
   
   private def not(vals: List[Value]): Value = {

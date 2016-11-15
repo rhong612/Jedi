@@ -171,7 +171,7 @@ object EwokParsers {
     println("Expected: " + 23)
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "def a2 = 3 + 4 * 5"
+    expression = "def b2 = 3 + 4 * 5"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
@@ -192,60 +192,144 @@ object EwokParsers {
     println("Expected: true")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "a2"
+    expression = "b2"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: 23")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "def a1 = 4"
+    expression = "def b1 = 4"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: ok")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "a1 < a2"
+    expression = "b1 < b2"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: true")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "a1 == a2"
+    expression = "b1 == b2"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: false")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "def a3 = if (a1 == a2) 3 else 4"
+    expression = "def b3 = if (b1 == b2) 3 else 4"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: ok")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "a3"
+    expression = "b3"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: 4")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "def a4 = if (a1 < a2) 7 else 10"
+    expression = "def b4 = if (b1 < b2) 7 else 10"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: ok")
     println("Actual: " + eTree.get.execute(globalEnv))
     
-    expression = "a4"
+    expression = "b4"
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
     println("Expected: 7")
     println("Actual: " + eTree.get.execute(globalEnv))
+    
+    
+    expression = "def a1 = 2 + 3 * 5"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: ok")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 17.0")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "def a2 = (2 + 3) * 5"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: ok")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a2"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 25.0")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1 == a2"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: false")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1 < a2"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: true")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1 < a2 && true && a1 == a2 && a1 == a3"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: false")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1 == a2 || false || a1 < a2 || a1 == a3"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: true")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a1 == a3"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: Undefined Identifier: a3")
+    try {
+      println("Actual: " + eTree.get.execute(globalEnv)) 
+    }
+    catch {
+      case e : UndefinedException => println("Actual: " + e.msg)
+    }
+    expression = "def a3 = if (a1 == a2) a4 else 0"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: ok")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a3"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 0.0")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "a4"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: Undefined Identifier: a4")
+    try {
+      println("Actual: " + eTree.get.execute(globalEnv)) 
+    }
+    catch {
+      case e : UndefinedException => println("Actual: " + e.msg)
+    }
   }
 }

@@ -3,14 +3,14 @@ package expressions
 import values._
 import ui._
 
-case class FunCall(opcode : Expression, args : List[Expression] = Nil) extends Expression{
+case class FunCall(val operator : Expression, operands : List[Expression] = Nil) extends Expression{
   def execute(env : Environment) : Value = {
-    if (args.isEmpty) {
-      opcode.execute(env)
+    if (operands.isEmpty) {
+      operator.execute(env)
     }
     else {
-      var id = opcode.asInstanceOf[Identifier]
-      system.execute(id, args.map(_.execute(env))) 
+      var id = operator.asInstanceOf[Identifier]
+      system.execute(id, operands.map(_.execute(env))) 
     }
   }
 }

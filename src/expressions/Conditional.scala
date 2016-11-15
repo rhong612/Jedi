@@ -3,7 +3,7 @@ package expressions
 import values._
 import ui._
 
-case class Conditional(condition : Expression, body : Expression, elseBody : Expression = null) extends SpecialForm{
+case class Conditional(condition : Expression, consequence : Expression, alternative : Expression = null) extends SpecialForm{
   def execute(env : Environment) : Value = {
     val result = condition.execute(env)
     if (!result.isInstanceOf[Boole]) {
@@ -11,10 +11,10 @@ case class Conditional(condition : Expression, body : Expression, elseBody : Exp
     }
     val cond = result.asInstanceOf[Boole]
     if (cond.value) {
-      body.execute(env)
+      consequence.execute(env)
     }
-    else if (elseBody != null){
-      elseBody.execute(env)
+    else if (alternative != null){
+      alternative.execute(env)
     }
     else {
       Notification.OK 

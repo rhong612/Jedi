@@ -9,19 +9,19 @@ case class Boole(val value : Boolean) extends Literal{
   }
   
   def &&(other : Boole) = {
-    new Boole(this.value && other.value)
+    Boole(this.value && other.value)
   }
   
   def ||(other : Boole) = {
-    new Boole(this.value || other.value)
+    Boole(this.value || other.value)
   }
   
   def unary_! = {
-    new Boole(!value)
+    Boole(!value)
   }
   
   def ==(other : Boole) = {
-    new Boole(this.value == other.value)
+    Boole(this.value == other.value)
   }
   
   override def toString = value.toString

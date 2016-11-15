@@ -9,27 +9,27 @@ case class Number(val value : Double) extends Literal{
   }
   
   def +(other : Number) = {
-    new Number(this.value + other.value)
+    Number(this.value + other.value)
   }
   
   def -(other : Number) = {
-    new Number(this.value - other.value)
+    Number(this.value - other.value)
   }
   
   def *(other : Number) = {
-    new Number(this.value * other.value)
+    Number(this.value * other.value)
   }
   
   def /(other : Number) = {
-    new Number(this.value / other.value)
+    Number(this.value / other.value)
   }
   
   def ==(other : Number) = {
-    new Boole(this.value == other.value)
+    Boole(this.value == other.value)
   }
   
   def <(other : Number) = {
-    new Boole(this.value < other.value)
+    Boole(this.value < other.value)
   }
   
   override def toString = value.toString

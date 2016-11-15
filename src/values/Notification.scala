@@ -5,9 +5,11 @@ class Notification(val msg : String) extends Value{
 }
 
 object Notification {
-  val OK = new Notification("ok")
-  val UNKNOWN = new Notification("UNKNOWN")
-  val ERROR = new Notification("ERROR")
-  val VAR_UPDATED = new Notification("VARIABLE UPDATED")
-  val BINDING = new Notification("BINDING CREATED")
+  def apply(msg : String) = new Notification(msg)
+  
+  val OK = Notification("ok")
+  val UNKNOWN = Notification("UNKNOWN")
+  val ERROR = Notification("ERROR")
+  val VAR_UPDATED = Notification("VARIABLE UPDATED")
+  val BINDING = Notification("BINDING CREATED")
 }
