@@ -345,6 +345,7 @@ object EwokParsers {
     eTree = ewokParser.parseAll(ewokParser.expression, expression)
     println()
     println(expression)
+    println("Expected: 5.0")
     println("Actual: " + eTree.get.execute(globalEnv))
   }
 }
