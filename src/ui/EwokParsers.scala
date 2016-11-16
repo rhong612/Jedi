@@ -38,15 +38,25 @@ class EwokParsers extends RegexParsers {
      case sum ~ Nil => sum
      case sum ~ list => FunCall(Identifier("less"), sum :: list)
    }
-   def sum : Parser[FunCall] = (product ~ rep(("""\+|-""".r)~>product)) ^^
+   def sum : Parser[FunCall] = product ~ rep(("+" | "-")~product ^^ {case "+"~s=>s case "-"~s=>negate(s)} ) ^^
    {
      case product ~ Nil => product
      case product ~ list => FunCall(Identifier("add"), product :: list)
    }
-   def product : Parser[FunCall] = (funcall ~ rep(("""\*|/""".r)~>funcall)) ^^
+   private def negate(exp: Expression): Expression = {
+     val sub = Identifier("sub")
+     val zero = Number(0)
+     FunCall(sub, List(zero, exp))
+   }
+   def product : Parser[FunCall] = funcall ~ rep(("*" | "/")~funcall ^^ {case "*"~s=>s case "/"~s=>inverse(s)} ) ^^
    {
      case funcall ~ Nil => funcall
      case funcall ~ list => FunCall(Identifier("mul"), funcall :: list)
+   }
+   private def inverse(exp: Expression): Expression = {
+     val div = Identifier("div")
+     val one = Number(1)
+     FunCall(div, List(one, exp))
    }
    def funcall : Parser[FunCall] = (term ~ opt(operands)) ^^
    {
@@ -325,5 +335,16 @@ object EwokParsers {
     catch {
       case e : UndefinedException => println("Actual: " + e.msg)
     }
+    expression = "3 - 2 - 1"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 0.0")
+    println("Actual: " + eTree.get.execute(globalEnv))
+    expression = "100 / 10 / 2"
+    eTree = ewokParser.parseAll(ewokParser.expression, expression)
+    println()
+    println(expression)
+    println("Actual: " + eTree.get.execute(globalEnv))
   }
 }
