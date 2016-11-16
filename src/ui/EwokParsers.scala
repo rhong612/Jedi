@@ -73,14 +73,9 @@ class EwokParsers extends RegexParsers {
     case tree => Boole(tree.toBoolean)
   }
   
-  def number : Parser[Number] = (opt("""\+|-""".r)~"""[0-9]+""".r~opt(""".[0-9]+""".r))  ^^
+  def number : Parser[Number] = ("""[\+|-]?[0-9]+(\.[0-9]+)?""".r)  ^^
   {
-    case None ~ firstNum ~ None => Number((firstNum).toDouble)
-    case None ~ firstNum ~ Some(otherNums) => Number((firstNum + otherNums).toDouble)
-    case Some("+") ~ firstNum ~ None => Number((firstNum).toDouble)
-    case Some("+") ~ firstNum ~ Some(otherNums) => Number((firstNum + otherNums).toDouble)
-    case Some("-") ~ firstNum ~ None => Number((firstNum).toDouble * -1)
-    case Some("-") ~ firstNum ~ Some(otherNums) => Number((firstNum + otherNums).toDouble * -1)     
+    case num => Number(num.toDouble)
   }
 }
 
