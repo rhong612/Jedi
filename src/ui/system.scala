@@ -13,7 +13,9 @@ object system {
       case "sub" => sub(args)
       case "div" => div(args)
       case "equals" => equals(args)
+      case "unequal" => unequal(args)
       case "less" => lessThan(args)
+      case "more" => moreThan(args)
       case "not" => not(args)
       
       case _ => throw new UndefinedException("Unknown Operation: " + opcode.name)
@@ -73,12 +75,41 @@ object system {
     }
   }
   
+  private def unequal(vals: List[Value]): Value = {
+    if (vals.length != 2) throw new TypeException("unequal expects 2 inputs")
+    var numCount = 0
+    var boolCount = 0
+    for (i <- 0 until 2) {
+      vals(i) match {
+        case n : Number => numCount += 1
+        case b : Boole => boolCount += 1
+        case _ => throw new TypeException("Values must be both booles or both numbers")
+      }
+    }
+    if (numCount == 2) {
+      val args = vals.map(_.asInstanceOf[Number]) 
+      Boole(args(0) != args(1))
+    }
+    else {
+      val args = vals.map(_.asInstanceOf[Boole])
+      Boole(args(0) != args(1))
+    }
+  }
+  
   private def lessThan(vals: List[Value]): Value = {
     if (vals.length != 2) throw new TypeException("less than expects 2 inputs")
     val ok = vals.filter(_.isInstanceOf[Number])
     if (ok.length < vals.length) throw new TypeException("all less than inputs must be numbers")
     val args2 = vals.map(_.asInstanceOf[Number])
     args2(0) < args2(1)
+  }
+  
+  private def moreThan(vals: List[Value]): Value = {
+    if (vals.length != 2) throw new TypeException("more than expects 2 inputs")
+    val ok = vals.filter(_.isInstanceOf[Number])
+    if (ok.length < vals.length) throw new TypeException("all less than inputs must be numbers")
+    val args2 = vals.map(_.asInstanceOf[Number])
+    args2(0) > args2(1)
   }
   
   private def not(vals: List[Value]): Value = {

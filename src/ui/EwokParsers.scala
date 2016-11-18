@@ -34,10 +34,12 @@ class EwokParsers extends RegexParsers {
 			case inequality ~ Nil => inequality
 			case inequality ~ listInequalities => FunCall(Identifier("equals"), inequality :: listInequalities)
 		}
-	def inequality: Parser[Expression] = (sum ~ rep("<" ~> sum)) ^^
+	def inequality: Parser[Expression] = (sum ~ opt(("<" | ">" | "!=") ~ sum)) ^^
 		{
-			case sum ~ Nil => sum
-			case sum ~ list => FunCall(Identifier("less"), sum :: list)
+			case sum ~ None => sum
+			case sum ~ Some("<" ~ s) => FunCall(Identifier("less"), List(sum, s))
+			case sum ~ Some(">" ~ s) => FunCall(Identifier("more"), List(sum, s))
+			case sum ~ Some("!=" ~ s) => FunCall(Identifier("unequal"), List(sum, s))
 		}
 	def sum: Parser[Expression] = product ~ rep(("+" | "-") ~ product ^^ { case "+" ~ s => s case "-" ~ s => negate(s) }) ^^
 		{
@@ -49,21 +51,21 @@ class EwokParsers extends RegexParsers {
 		val zero = Number(0)
 		FunCall(sub, List(zero, exp))
 	}
-	def product: Parser[Expression] = funcall ~ rep(("*" | "/") ~ funcall ^^ { case "*" ~ s => s case "/" ~ s => inverse(s) }) ^^
+	def product: Parser[Expression] = term ~ rep(("*" | "/") ~ term ^^ { case "*" ~ s => s case "/" ~ s => inverse(s) }) ^^
 		{
-			case funcall ~ Nil => funcall
-			case funcall ~ list => FunCall(Identifier("mul"), funcall :: list)
+			case term ~ Nil => term
+			case term ~ list => FunCall(Identifier("mul"), term :: list)
 		}
 	private def inverse(exp: Expression): Expression = {
 		val div = Identifier("div")
 		val one = Number(1)
 		FunCall(div, List(one, exp))
 	}
-	def funcall: Parser[Expression] = (term ~ opt(operands)) ^^
+	def funcall: Parser[Expression] = (identifier ~ opt(operands)) ^^
 		{
-			case term ~ None => term
-			case term ~ Some(Nil) => FunCall(term.asInstanceOf[Identifier], Nil)
-			case term ~ Some(opList) => FunCall(term.asInstanceOf[Identifier], opList)
+			case identifier ~ None => identifier
+			case identifier ~ Some(Nil) => FunCall(identifier, Nil)
+			case identifier ~ Some(opList) => FunCall(identifier, opList)
 		}
 
 	def operands: Parser[List[Expression]] = ("(" ~> opt(expression ~ rep("," ~> expression)) <~ ")") ^^
@@ -73,7 +75,7 @@ class EwokParsers extends RegexParsers {
 			case Some(exp ~ expList) => exp :: expList
 		}
 
-	def term: Parser[Expression] = literal | identifier | "(" ~> expression <~ ")"
+	def term: Parser[Expression] = literal | funcall | identifier | "(" ~> expression <~ ")"
 	def literal: Parser[Literal] = (boole | number)
 
 	def identifier: Parser[Identifier] = ("""[a-zA-Z][0-9a-zA-Z]*""".r) ^^
