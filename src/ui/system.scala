@@ -16,7 +16,7 @@ object system {
       case "less" => lessThan(args)
       case "not" => not(args)
       
-      case _ => throw new UndefinedException(opcode.name)
+      case _ => throw new UndefinedException("Unknown Operation: " + opcode.name)
     }
   }
 
