@@ -7,9 +7,7 @@ class Notification(val msg : String) extends Value{
 object Notification {
   def apply(msg : String) = new Notification(msg)
   
-  val OK = Notification("ok")
+  val OK = Notification("OK")
   val UNKNOWN = Notification("UNKNOWN")
   val ERROR = Notification("ERROR")
-  val VAR_UPDATED = Notification("VARIABLE UPDATED")
-  val BINDING = Notification("BINDING CREATED")
 }

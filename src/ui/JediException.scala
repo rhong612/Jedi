@@ -1,5 +1,5 @@
 package ui
 
-class JediException(val msg : String) extends Exception{
+class JediException(val msg : String = "Error!") extends Exception{
   
 }

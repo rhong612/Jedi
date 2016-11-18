@@ -42,6 +42,9 @@ object console {
             case e: UndefinedException => {
                println(e.msg)
             }
+            case e : TypeException => {
+            	println(e.msg)
+            }
          } finally {
             Console.flush 
          }
