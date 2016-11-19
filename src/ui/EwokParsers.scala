@@ -73,6 +73,7 @@ class EwokParsers extends RegexParsers {
 			case None => Nil
 			case Some(exp ~ Nil) => List(exp)
 			case Some(exp ~ expList) => exp :: expList
+			case _ => Nil
 		}
 
 	def term: Parser[Expression] = literal | funcall | identifier | "(" ~> expression <~ ")"
