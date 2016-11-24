@@ -9,7 +9,8 @@ object testDriver {
     Boole.test
     check
     check2
-    EwokParsers.test
+    //EwokParsers.test
+    WookieParsers.test
  }
   
  def check2() {
