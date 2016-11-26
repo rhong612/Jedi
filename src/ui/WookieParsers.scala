@@ -482,8 +482,8 @@ object WookieParsers {
     println(expression)
     println("Expected: false")
     println("Actual: " + eTree.get.execute(newEnv))
-    /*
-    expression = "def fact = lambda (n) if (n == 0) 1 else n * fact(n – 1)"
+    
+    expression = "def fact = lambda (n) if (n == 0) 1 else n * fact(n - 1)"
     eTree = wookieParser.parseAll(wookieParser.expression, expression)
     println()
     println(expression)
@@ -496,7 +496,7 @@ object WookieParsers {
     println(expression)
     println("Expected: 120.0")
     println("Actual: " + eTree.get.execute(newEnv))
-    
+    /*
     expression = "(lambda (z) 2 * z) (3)"
     eTree = wookieParser.parseAll(wookieParser.expression, expression)
     println()
