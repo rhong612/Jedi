@@ -7,7 +7,7 @@ class Closure(params : List[Identifier], body : Expression, defEnv : Environment
   def apply(args : List[Value]) : Value = {
   	var tempEnv = new Environment(defEnv)
   	if (params.length != args.length)
-  		throw new TypeException("List of params and args must be identical in size")
+  		throw new TypeException("Incorrect number of arguments")
   	tempEnv.put(params, args)
   	body.execute(tempEnv)
   }

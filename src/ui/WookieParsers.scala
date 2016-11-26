@@ -496,6 +496,20 @@ object WookieParsers {
     println(expression)
     println("Expected: 120.0")
     println("Actual: " + eTree.get.execute(newEnv))
+    
+    expression = "def fourCaller = lambda (x) x(4)"
+    eTree = wookieParser.parseAll(wookieParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: ok")
+    println("Actual: " + eTree.get.execute(newEnv))
+    
+    expression = "fourCaller(lambda (y) y + 1)"
+    eTree = wookieParser.parseAll(wookieParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 5.0")
+    println("Actual: " + eTree.get.execute(newEnv))
     /*
     expression = "(lambda (z) 2 * z) (3)"
     eTree = wookieParser.parseAll(wookieParser.expression, expression)
@@ -504,5 +518,6 @@ object WookieParsers {
     println("Expected: 6.0")
     println("Actual: " + eTree.get.execute(newEnv))
     */
+    
   }
 }

@@ -107,7 +107,7 @@ object system {
   private def moreThan(vals: List[Value]): Value = {
     if (vals.length != 2) throw new TypeException("more than expects 2 inputs")
     val ok = vals.filter(_.isInstanceOf[Number])
-    if (ok.length < vals.length) throw new TypeException("all less than inputs must be numbers")
+    if (ok.length < vals.length) throw new TypeException("all more than inputs must be numbers")
     val args2 = vals.map(_.asInstanceOf[Number])
     args2(0) > args2(1)
   }
