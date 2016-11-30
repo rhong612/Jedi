@@ -10,7 +10,8 @@ object testDriver {
     check
     check2
     //EwokParsers.test
-    WookieParsers.test
+    //WookieParsers.test
+    SithParsers.test
  }
   
  def check2() {
