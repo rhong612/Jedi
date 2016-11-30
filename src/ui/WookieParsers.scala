@@ -61,7 +61,7 @@ class WookieParsers extends RegexParsers {
 		val one = Number(1)
 		FunCall(div, List(one, exp))
 	}
-	def funcall: Parser[Expression] = (identifier ~ opt(operands)) ^^
+	def funcall: Parser[Expression] = ((identifier | ("("~>lambda<~")")) ~ opt(operands)) ^^
 		{
 			case identifier ~ None => identifier
 			case identifier ~ Some(Nil) => FunCall(identifier)
@@ -510,14 +510,12 @@ object WookieParsers {
     println(expression)
     println("Expected: 5.0")
     println("Actual: " + eTree.get.execute(newEnv))
-    /*
+    
     expression = "(lambda (z) 2 * z) (3)"
     eTree = wookieParser.parseAll(wookieParser.expression, expression)
     println()
     println(expression)
     println("Expected: 6.0")
     println("Actual: " + eTree.get.execute(newEnv))
-    */
-    
   }
 }
