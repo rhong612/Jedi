@@ -88,8 +88,11 @@ object system {
       vals(i) match {
         case n : Number => numCount += 1
         case b : Boole => boolCount += 1
-        case _ => throw new TypeException("Values must be both booles or both numbers")
       }
+    }
+    
+    if (numCount != 2 && boolCount != 2) {
+    	throw new TypeException("Values for unequals must be both booles or both numbers")
     }
     if (numCount == 2) {
       val args = vals.map(_.asInstanceOf[Number]) 
