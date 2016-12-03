@@ -4,7 +4,7 @@ import values._
 import expressions._
 
 object console {
-   val parsers = new WookieParsers // for now
+   val parsers = new SithParsers // for now
    val globalEnv = new Environment()
 
    def execute(cmmd: String): String = {

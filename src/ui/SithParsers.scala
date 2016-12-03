@@ -76,9 +76,14 @@ class SithParsers extends RegexParsers {
 			case _ => Nil
 		}
 
-	def term: Parser[Expression] = lambda | block | literal | funcall  | identifier | "(" ~> expression <~ ")"
+	def term: Parser[Expression] = deref | lambda | block | literal | funcall  | identifier | "(" ~> expression <~ ")"
 	def literal: Parser[Literal] = (boole | number)
-
+	
+	def deref : Parser[Expression] = "[" ~> expression <~ "]" ^^
+		{
+		case id => FunCall(Identifier("content"), List(id))
+		}
+	
 	def identifier: Parser[Identifier] = ("""[a-zA-Z][0-9a-zA-Z]*""".r) ^^
 		{
 			case id => Identifier(id)

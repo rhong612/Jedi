@@ -17,6 +17,8 @@ object system {
       case "less" => lessThan(args)
       case "more" => moreThan(args)
       case "not" => not(args)
+      case "var" => makeVar(args)
+      case "content" => content(args)
       
       case _ => throw new UndefinedException("Unknown Operation: " + opcode.name)
     }
@@ -118,5 +120,20 @@ object system {
     if (ok.length < vals.length) throw new TypeException("NOT input must be a boole")
     val args2 = vals.map(_.asInstanceOf[Boole])
     !args2(0)
+  }
+  
+  private def makeVar(vals : List[Value]) : Value = {
+  	if (vals.length != 1) throw new TypeException("Variables can only contain 1 value at a time")
+  	new Variable(vals.head)
+  }
+  
+  private def content(vals : List[Value]) : Value = {
+  	if (vals.length != 1) throw new TypeException("Can only get content of 1 variable at a time")
+  	if (vals.head.isInstanceOf[Variable]) {
+  		vals.head.asInstanceOf[Variable].content
+  	}
+  	else {
+  		throw new TypeException("Can only get content of a VARIABLE")
+  	}
   }
 }
