@@ -5,7 +5,7 @@ import expressions._
 import values._
 
 class SithParsers extends RegexParsers {
-	def expression: Parser[Expression] = declaration | conditional | assignment | disjunction | failure("Invalid expression")
+	def expression: Parser[Expression] = declaration | conditional | iteration | assignment | disjunction | failure("Invalid expression")
 
 	def declaration: Parser[Declaration] = ("def" ~ identifier ~ "=" ~ expression) ^^
 		{
@@ -121,6 +121,11 @@ class SithParsers extends RegexParsers {
 			case Some(e ~ exps) => e :: exps
 			case _ => Nil
 		}
+	
+	def iteration : Parser[Iteration] = "while" ~ "(" ~ expression ~ ")" ~ expression ^^
+	{
+		case "while" ~ "(" ~ cond ~ ")" ~ body => Iteration(cond, body)
+	}
 }
 
 object SithParsers {
@@ -527,5 +532,134 @@ object SithParsers {
     println(expression)
     println("Expected: 6.0")
     println("Actual: " + eTree.get.execute(newEnv))
+    
+    
+    println("------------TESTING VARIABLES, ITERATION, AND ASSIGNMENT----------------")
+    val env = new Environment
+    expression = "def count = var(0)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: OK")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "count"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: Variable(0.0)")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[count]"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 0.0")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "count = [count] + 1"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: DONE")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[count]"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 1.0")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "while([count] < 100) count = [count] + 1"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: DONE")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[count]"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 100.0")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "def fun = var(lambda(x) x * x)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: OK")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[fun](3)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 9.0")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "fun = lambda(x) 2 * x"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: DONE")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[fun](3)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 6.0")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "def more = var(true)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: OK")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "more = false"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: done")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "more = 0"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: done")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "def countRef = var(count)"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: OK")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "countRef"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: Variable(Variable(100.0))")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[countRef]"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: Variable(100.0)")
+    println("Actual: " + eTree.get.execute(env))
+    
+    expression = "[[countRef]]"
+    eTree = sithParser.parseAll(sithParser.expression, expression)
+    println()
+    println(expression)
+    println("Expected: 100.0")
+    println("Actual: " + eTree.get.execute(env))
   }
 }
