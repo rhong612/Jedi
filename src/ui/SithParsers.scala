@@ -5,7 +5,7 @@ import expressions._
 import values._
 
 class SithParsers extends RegexParsers {
-	def expression: Parser[Expression] = declaration | conditional | disjunction | failure("Invalid expression")
+	def expression: Parser[Expression] = declaration | conditional | assignment | disjunction | failure("Invalid expression")
 
 	def declaration: Parser[Declaration] = ("def" ~ identifier ~ "=" ~ expression) ^^
 		{
@@ -61,7 +61,7 @@ class SithParsers extends RegexParsers {
 		val one = Number(1)
 		FunCall(div, List(one, exp))
 	}
-	def funcall: Parser[Expression] = ((identifier | ("("~>lambda<~")")) ~ opt(operands)) ^^
+	def funcall: Parser[Expression] = ((identifier | ("("~>lambda<~")") | deref) ~ opt(operands)) ^^
 		{
 			case identifier ~ None => identifier
 			case identifier ~ Some(Nil) => FunCall(identifier)
@@ -76,8 +76,13 @@ class SithParsers extends RegexParsers {
 			case _ => Nil
 		}
 
-	def term: Parser[Expression] = deref | lambda | block | literal | funcall  | identifier | "(" ~> expression <~ ")"
+	def term: Parser[Expression] = lambda | block | literal | funcall | deref | identifier | "(" ~> expression <~ ")"
 	def literal: Parser[Literal] = (boole | number)
+	
+	def assignment : Parser[Expression] = identifier ~ "=" ~ expression ^^
+		{
+		case id ~ "=" ~ exp => Assignment(id, exp)
+		}
 	
 	def deref : Parser[Expression] = "[" ~> expression <~ "]" ^^
 		{

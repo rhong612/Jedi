@@ -3,7 +3,7 @@ package expressions
 import values._
 import ui._
 
-class Assignment(val varName : Identifier, val update : Expression) extends SpecialForm{
+case class Assignment(varName : Identifier, update : Expression) extends SpecialForm{
   def execute(env : Environment) = {
   	val value = varName.execute(env)
   	if (value.isInstanceOf[Variable]) {
