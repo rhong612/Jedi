@@ -10,4 +10,5 @@ object Notification {
   val OK = Notification("OK")
   val UNKNOWN = Notification("UNKNOWN")
   val ERROR = Notification("ERROR")
+  val DONE = Notification("DONE")
 }
