@@ -58,50 +58,22 @@ object system {
   
   private def equals(vals: List[Value]): Value = {
     if (vals.length != 2) throw new TypeException("equals expects 2 inputs")
-    var numCount = 0
-    var boolCount = 0
-    for (i <- 0 until 2) {
-      vals(i) match {
-        case n : Number => numCount += 1
-        case b : Boole => boolCount += 1
-      }
+    val numCheck = vals.filter(_.isInstanceOf[Number]).length
+    val booleCheck = vals.filter(_.isInstanceOf[Boole]).length
+    if (numCheck != 2 && booleCheck != 2) {
+    	throw new TypeException("Comparisons can only be made between 2 Numbers or 2 Booles")
     }
-    if (numCount != 2 && boolCount != 2) {
-    	throw new TypeException("Values for equals must be both booles or both numbers")
-    }
-    
-    if (numCount == 2) {
-      val args = vals.map(_.asInstanceOf[Number]) 
-      Boole(args(0) == args(1))
-    }
-    else {
-      val args = vals.map(_.asInstanceOf[Boole])
-      Boole(args(0) == args(1))
-    }
+    Boole(vals(0) == vals(1))
   }
   
   private def unequal(vals: List[Value]): Value = {
     if (vals.length != 2) throw new TypeException("unequal expects 2 inputs")
-    var numCount = 0
-    var boolCount = 0
-    for (i <- 0 until 2) {
-      vals(i) match {
-        case n : Number => numCount += 1
-        case b : Boole => boolCount += 1
-      }
+    val numCheck = vals.filter(_.isInstanceOf[Number]).length
+    val booleCheck = vals.filter(_.isInstanceOf[Boole]).length
+    if (numCheck != 2 && booleCheck != 2) {
+    	throw new TypeException("Comparisons can only be made between 2 Numbers or 2 Booles")
     }
-    
-    if (numCount != 2 && boolCount != 2) {
-    	throw new TypeException("Values for unequals must be both booles or both numbers")
-    }
-    if (numCount == 2) {
-      val args = vals.map(_.asInstanceOf[Number]) 
-      Boole(args(0) != args(1))
-    }
-    else {
-      val args = vals.map(_.asInstanceOf[Boole])
-      Boole(args(0) != args(1))
-    }
+    Boole(vals(0) != vals(1))
   }
   
   private def lessThan(vals: List[Value]): Value = {
